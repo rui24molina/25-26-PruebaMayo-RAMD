@@ -41,5 +41,5 @@ jobs:
           script: |
             cd /home/admin
             docker compose down --rmi all
-	docker compose pull
+            docker compose pull
             docker compose up -d
