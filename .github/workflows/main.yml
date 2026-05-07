@@ -1,0 +1,45 @@
+name: Docker CI/CD
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'src/**'
+
+jobs:
+  build:
+    name: Build and Push Docker image
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3 
+        with:
+          username: ${{ secrets.DHUB_USER }}
+          password: ${{ secrets.DHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true 
+          tags: ${{ secrets.DHUB_USER }}/api-molina:latest
+
+  deploy:
+    name: Deploy to AWS
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH and Deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_IP }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            cd /home/admin
+            docker compose down --rmi all
+	docker compose pull
+            docker compose up -d
