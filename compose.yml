@@ -1,7 +1,7 @@
 
 services:
   examen:
-    image: drui24/api-molina:latest .
+    image: drui24/api-molina:latest
     ports:
-      - 80:8000
+      - "80:8000"
     restart: always
