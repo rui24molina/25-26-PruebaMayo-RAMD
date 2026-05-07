@@ -12,9 +12,17 @@ jobs:
   build:
     name: Build and Push Docker image
     runs-on: ubuntu-latest
-    steps: 
+    steps:
+       
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for secrets (Gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
