@@ -7,11 +7,6 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI()
 app.include_router(items.router)
 
-#prueba linting
-# Añade esto al final de app/main.py
-print(variable) 
-    error = "esto esta mal"
-
 # Código que se añade
 @app.get("/status")
 def version():
